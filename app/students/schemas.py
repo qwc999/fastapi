@@ -28,6 +28,7 @@ class SStudent(BaseModel):
     course: int = Field(..., ge=1, le=5, description="Курс должен быть в диапазоне от 1 до 5")
     special_notes: Optional[str] = Field(None, max_length=500, description="Дополнительные заметки, не более 500 символов")
     major: Optional[str] = Field(..., description="Название факультета")
+    photo: Optional[str] = Field(None, max_length=100, description="Фото студента")
 
     @validator("phone_number")
     def validate_phone_number(cls, value):

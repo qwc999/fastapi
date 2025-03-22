@@ -8,9 +8,15 @@ from typing import Union
 router = APIRouter(prefix='/students', tags=['Работа со студентами'])
 
 
-@router.get("/", summary="Получить всех студентов")
+@router.get("/", summary="Получить всех студентов", response_model=list[SStudent])
 async def get_all_students(request_body: RBStudent = Depends()) -> list[SStudent]:
-    return await StudentDAO.find_all(**request_body.to_dict())
+    students = await StudentDAO.find_all(**request_body.to_dict())
+    result = []
+    for student in students:
+        student_data = student.to_dict()  # Преобразуем студента в словарь
+        student_data["major"] = student.major.major_name if student.major else None  # Преобразуем Major в строку
+        result.append(SStudent(**student_data))  # Валидируем через SStudent
+    return result
 
 @router.get("/by_filter", summary="Получить одного студента по фильтру")
 async def get_student_by_filter(request_body: RBStudent = Depends()) -> Union[SStudent, dict]:

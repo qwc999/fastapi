@@ -19,7 +19,9 @@ class Student(Base):
     major_id: Mapped[int] = mapped_column(ForeignKey("majors.id"), nullable=False)
 
     # Определяем отношения: один студент имеет один факультет
-    major: Mapped["Major"] = relationship("Major", back_populates="students")
+    major: Mapped["Major"] = relationship("Major", back_populates="students", lazy="joined")
+
+    photo: Mapped[str] = mapped_column(Text, nullable=True)
 
     def __str__(self):
         return (f"{self.__class__.__name__}(id={self.id}, "
@@ -41,5 +43,6 @@ class Student(Base):
             "enrollment_year": self.enrollment_year,
             "course": self.course,
             "special_notes": self.special_notes,
-            "major_id": self.major_id
-        }
+            "major_id": self.major_id,
+            "major": self.major.major_name
+       }
